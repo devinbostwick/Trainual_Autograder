@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { ExamList } from './components/ExamList';
 import { ExamGrader } from './components/ExamGrader';
-import { ExamDefinition } from './types';
+import { ChatBox } from './components/ChatBox';
+import { ExamDefinition, ExamResult } from './types';
 
 const App: React.FC = () => {
   const [selectedExam, setSelectedExam] = useState<ExamDefinition | null>(null);
+  const [examResult, setExamResult] = useState<ExamResult | null>(null);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary/20">
@@ -15,7 +17,8 @@ const App: React.FC = () => {
         {selectedExam ? (
           <ExamGrader 
             exam={selectedExam} 
-            onBack={() => setSelectedExam(null)} 
+            onBack={() => setSelectedExam(null)}
+            onResultReady={setExamResult}
           />
         ) : (
           <ExamList onSelectExam={setSelectedExam} />
@@ -30,6 +33,9 @@ const App: React.FC = () => {
           </p>
         </div>
       </footer>
+
+      {/* Chat Assistant */}
+      <ChatBox examResult={examResult} />
     </div>
   );
 };

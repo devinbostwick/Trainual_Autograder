@@ -6,9 +6,10 @@ import { UploadCloud, FileText, CheckCircle2, AlertCircle, RefreshCw, ChevronLef
 interface ExamGraderProps {
   exam: ExamDefinition;
   onBack: () => void;
+  onResultReady?: (result: ExamResult | null) => void;
 }
 
-export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack }) => {
+export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultReady }) => {
   const [textInput, setTextInput] = useState('');
   const [isGrading, setIsGrading] = useState(false);
   const [result, setResult] = useState<ExamResult | null>(null);
@@ -44,6 +45,7 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack }) => {
     try {
       const gradingResult = await gradeSubmission(exam, textInput);
       setResult(gradingResult);
+      onResultReady?.(gradingResult); // Notify parent component
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
     } finally {
