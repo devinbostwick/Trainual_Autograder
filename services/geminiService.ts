@@ -9,13 +9,17 @@ const parseScore = (value: any): number => {
 
 export const gradeSubmission = async (
   exam: ExamDefinition,
-  studentText: string
+  studentText: string,
+  apiKey?: string
 ): Promise<ExamResult> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API Key is missing in environment variables.");
+  // Use provided API key, or fallback to environment variable
+  const key = apiKey || process.env.API_KEY;
+  
+  if (!key) {
+    throw new Error("API Key is missing from environment variables.");
   }
 
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: key });
 
   // Define the schema for structured output to ensure reliable parsing
   const gradingSchema = {
