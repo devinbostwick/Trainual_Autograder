@@ -45,16 +45,40 @@ export const gradeSubmission = async (
   };
 
   const prompt = `
-    You are an expert hospitality training grader for OpsFlow.
+    You are an expert hospitality exam grader. Your goal is to provide CONSISTENT grading across multiple submissions.
     
     TASK:
     Compare the STUDENT SUBMISSION against the ANSWER KEY.
     
-    RULES:
-    1. **Lax Parsing**: You must be tolerant of typos, misspellings, and minor grammatical errors. 
-    2. **Semantic Matching**: If the student uses different words but conveys the correct meaning, mark it as Correct.
-    3. **Extraction**: The student submission might be a raw copy-paste. You need to identify which part of their text corresponds to which question in the key.
-    4. **Scoring**: Award points based on the 'points' field in the key.
+    GRADING RULES (Apply consistently):
+    
+    1. **Units & Measurements**: Ignore missing or varying units if the number is correct.
+       - "1" = "1oz" = "1 oz" = "1 ounce" (ALL CORRECT)
+       - ".5" = "0.5" = "½" = "half" (ALL CORRECT)
+    
+    2. **Abbreviations & Terminology**: Accept common variations and synonyms.
+       - "repo" = "reposado" (CORRECT)
+       - "top" = "splash" = "float" (CORRECT for finishing touches)
+       - "soda" = "soda water" = "club soda" (CORRECT)
+    
+    3. **Spelling & Typos**: Be forgiving of minor spelling errors (1-2 characters).
+       - "patron" vs "patrón" (CORRECT)
+       - "cointreau" vs "cointrau" (CORRECT)
+    
+    4. **Formatting**: Ignore capitalization, extra spaces, and punctuation differences.
+       - "Salt Rim" = "salt rim" = "saltrim" (CORRECT)
+    
+    5. **Order**: Ingredient order doesn't matter unless explicitly required.
+       - "tequila, lime, triple sec" = "triple sec, tequila, lime" (CORRECT)
+    
+    6. **Missing Information**: Only mark incorrect if critical details are completely absent.
+       - Missing garnish when it's specified = Partial credit
+       - Wrong ingredient = Zero points
+    
+    CONSISTENCY IS CRITICAL:
+    - The SAME answer submitted multiple times MUST receive the SAME score every time
+    - Use the schema to extract answers systematically
+    - Be deterministic in your evaluation
     
     ANSWER KEY JSON:
     ${JSON.stringify(exam.answerKey)}
@@ -70,7 +94,7 @@ export const gradeSubmission = async (
       config: {
         responseMimeType: "application/json",
         responseSchema: gradingSchema,
-        temperature: 0.1, // Low temperature for consistent grading
+        temperature: 0, // Zero temperature for maximum consistency
       }
     });
 
