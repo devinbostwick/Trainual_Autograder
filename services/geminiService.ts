@@ -61,17 +61,24 @@ export const gradeSubmission = async (
        - "top" = "splash" = "float" (CORRECT for finishing touches)
        - "soda" = "soda water" = "club soda" (CORRECT)
     
-    3. **Spelling & Typos**: Be forgiving of minor spelling errors (1-2 characters).
+    3. **Brands vs Generic Names**: Accept both brand names and generic spirit types interchangeably.
+       - "vodka" = "E11even vodka" = "Tito's" = "Grey Goose" (ALL CORRECT)
+       - "tequila" = "patron" = "casamigos" = "1800" (ALL CORRECT)
+       - "rum" = "Bacardi" = "Captain Morgan" (ALL CORRECT)
+       - "whiskey" = "Jack Daniels" = "Jameson" (ALL CORRECT)
+       - If answer key says specific brand, generic type is acceptable and vice versa
+    
+    4. **Spelling & Typos**: Be forgiving of minor spelling errors (1-2 characters).
        - "patron" vs "patrón" (CORRECT)
        - "cointreau" vs "cointrau" (CORRECT)
     
-    4. **Formatting**: Ignore capitalization, extra spaces, and punctuation differences.
+    5. **Formatting**: Ignore capitalization, extra spaces, and punctuation differences.
        - "Salt Rim" = "salt rim" = "saltrim" (CORRECT)
     
-    5. **Order**: Ingredient order doesn't matter unless explicitly required.
+    6. **Order**: Ingredient order doesn't matter unless explicitly required.
        - "tequila, lime, triple sec" = "triple sec, tequila, lime" (CORRECT)
     
-    6. **Missing Information**: Only mark incorrect if critical details are completely absent.
+    7. **Missing Information**: Only mark incorrect if critical details are completely absent.
        - Missing garnish when it's specified = Partial credit
        - Wrong ingredient = Zero points
     
