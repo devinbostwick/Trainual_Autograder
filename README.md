@@ -15,7 +15,7 @@ An AI-powered exam grading application built with React, TypeScript, and Google'
 - 🎯 Support for multiple exam types
 - 🚀 Fast and accurate results
 - 🎨 Clean, modern UI
-- 💬 **AI Chat Assistant** - Students can ask questions about their exam results and get instant help
+- 💬 **Intelligence Chat** - AI-powered assistant to help HR and trainers analyze exam results and make informed grading decisions
 
 ## Quick Start
 

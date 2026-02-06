@@ -16,33 +16,46 @@ export const chatWithAI = async (
   const ai = new GoogleGenAI({ apiKey: key });
 
   // Build context about the exam if available
-  let systemContext = `You are a helpful AI tutor for OpsFlow hospitality training. 
-You help students understand their exam results, clarify concepts, and improve their knowledge.
-Be encouraging, clear, and educational in your responses.`;
+  let systemContext = `You are an AI assistant helping HR professionals and trainers with exam grading and analysis.
+You provide insights, answer questions about exam results, help identify patterns, and assist with grading decisions.
+Be professional, analytical, and helpful in your responses.`;
 
   if (examResult) {
     const incorrectQuestions = examResult.questions.filter(q => !q.isCorrect);
-    systemContext += `\n\nThe student just completed the "${examResult.examTitle}" exam.
-Score: ${examResult.totalScore}/${examResult.maxScore} (${examResult.percentage.toFixed(1)}%)
+    const correctQuestions = examResult.questions.filter(q => q.isCorrect);
+    
+    systemContext += `\n\nCurrent Exam Being Reviewed: "${examResult.examTitle}"
+Overall Score: ${examResult.totalScore}/${examResult.maxScore} (${examResult.percentage.toFixed(1)}%)
 
-Questions they got wrong:
+Correct Answers: ${correctQuestions.length}
+Incorrect Answers: ${incorrectQuestions.length}
+
+Questions marked incorrect:
 ${incorrectQuestions.map(q => `
-- ${q.questionText}
-  Their answer: ${q.studentAnswer}
-  Feedback: ${q.feedback}
+- Question: ${q.questionText}
+  Student's Answer: ${q.studentAnswer}
+  AI Feedback: ${q.feedback}
+  Score: ${q.score}/${q.maxPoints}
+`).join('\n')}
+
+Questions marked correct:
+${correctQuestions.map(q => `
+- Question: ${q.questionText}
+  Student's Answer: ${q.studentAnswer}
+  Score: ${q.score}/${q.maxPoints}
 `).join('\n')}`;
   }
 
   // Build conversation history
   const conversationText = chatHistory.map(msg => 
-    `${msg.role === 'user' ? 'Student' : 'AI Tutor'}: ${msg.content}`
+    `${msg.role === 'user' ? 'HR/Grader' : 'AI Assistant'}: ${msg.content}`
   ).join('\n\n');
 
   const fullPrompt = `${systemContext}
 
-${conversationText ? `Previous conversation:\n${conversationText}\n\n` : ''}Student: ${message}
+${conversationText ? `Previous conversation:\n${conversationText}\n\n` : ''}HR/Grader: ${message}
 
-AI Tutor:`;
+AI Assistant:`;
 
   try {
     const response = await ai.models.generateContent({

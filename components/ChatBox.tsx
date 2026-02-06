@@ -28,11 +28,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ examResult }) => {
       const welcomeMessage: ChatMessage = {
         id: '1',
         role: 'assistant',
-        content: `Hi! I'm your AI tutor. You just completed "${examResult.examTitle}" and scored ${examResult.percentage.toFixed(1)}%. ${
-          examResult.percentage >= 80 
-            ? "Great job! 🎉" 
-            : "Let me help you understand the questions you missed."
-        } Feel free to ask me anything about your exam!`,
+        content: `Exam analysis ready for "${examResult.examTitle}". Score: ${examResult.totalScore}/${examResult.maxScore} (${examResult.percentage.toFixed(1)}%). How can I assist with your grading review?`,
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
@@ -92,7 +88,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ examResult }) => {
         aria-label="Open chat"
       >
         <MessageCircle size={24} />
-        <span className="font-medium">Ask AI Tutor</span>
+        <span className="font-medium">Intelligence Chat</span>
       </button>
     );
   }
@@ -103,7 +99,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ examResult }) => {
       <div className="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
         <div className="flex items-center gap-2">
           <MessageCircle size={20} />
-          <h3 className="font-semibold">AI Tutor</h3>
+          <h3 className="font-semibold">Intelligence Chat</h3>
         </div>
         <button
           onClick={() => setIsOpen(false)}
@@ -119,7 +115,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ examResult }) => {
         {messages.length === 0 && (
           <div className="text-center text-gray-500 mt-8">
             <MessageCircle size={48} className="mx-auto mb-2 opacity-50" />
-            <p>Ask me anything about your exam!</p>
+            <p>Ask for grading insights and analysis</p>
           </div>
         )}
         
