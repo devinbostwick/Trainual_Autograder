@@ -61,16 +61,21 @@ export const gradeSubmission = async (
        - "top" = "splash" = "float" (CORRECT for finishing touches)
        - "soda" = "soda water" = "club soda" (CORRECT)
     
-    3. **Brands vs Generic Names**: Accept both brand names and generic spirit types interchangeably.
-       - "vodka" = "E11even vodka" = "Tito's" = "Grey Goose" (ALL CORRECT)
-       - "tequila" = "patron" = "casamigos" = "1800" (ALL CORRECT)
-       - "rum" = "Bacardi" = "Captain Morgan" (ALL CORRECT)
-       - "whiskey" = "Jack Daniels" = "Jameson" (ALL CORRECT)
-       - If answer key says specific brand, generic type is acceptable and vice versa
+    3. **Brand Names - Partial Credit Rule**:
+       - CORRECT brand = Full points
+       - WRONG brand (e.g., "Tito's" when answer is "Grey Goose") = Zero points
+       - Generic name instead of brand (e.g., "vodka" when answer is "Grey Goose") = Deduct 0.5 points
+       - Examples:
+         * Answer key: "Grey Goose vodka" → Student: "Grey Goose" = Full points
+         * Answer key: "Grey Goose vodka" → Student: "vodka" = -0.5 points
+         * Answer key: "Grey Goose vodka" → Student: "Tito's" = 0 points (wrong brand)
+         * Answer key: "Patron reposado" → Student: "tequila" = -0.5 points
+         * Answer key: "Patron reposado" → Student: "Patron" = Full points
     
     4. **Spelling & Typos**: Be forgiving of minor spelling errors (1-2 characters).
        - "patron" vs "patrón" (CORRECT)
        - "cointreau" vs "cointrau" (CORRECT)
+       - "grey goose" vs "gray goose" (CORRECT)
     
     5. **Formatting**: Ignore capitalization, extra spaces, and punctuation differences.
        - "Salt Rim" = "salt rim" = "saltrim" (CORRECT)
@@ -79,7 +84,7 @@ export const gradeSubmission = async (
        - "tequila, lime, triple sec" = "triple sec, tequila, lime" (CORRECT)
     
     7. **Missing Information**: Only mark incorrect if critical details are completely absent.
-       - Missing garnish when it's specified = Partial credit
+       - Missing garnish when it's specified = Partial credit (-0.5 points)
        - Wrong ingredient = Zero points
     
     CONSISTENCY IS CRITICAL:
