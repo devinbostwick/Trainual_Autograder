@@ -34,8 +34,8 @@ const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* Chat Assistant */}
-      <ChatBox examResult={examResult} />
+      {/* Chat Assistant - Disabled for now */}
+      {/* <ChatBox examResult={examResult} /> */}
     </div>
   );
 };
