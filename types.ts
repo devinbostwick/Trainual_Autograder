@@ -15,6 +15,10 @@ export interface QuestionKey {
   questionText: string;
   correctAnswer: string;
   points: number;
+  // Metadata for enhanced grading (optional)
+  gradingType?: 'factual' | 'conceptual'; // factual = ingredients/numbers, conceptual = processes/explanations
+  requiredConcepts?: string[]; // Key concepts that should be present in the answer
+  minimumConcepts?: number; // Minimum number of concepts required for partial credit
 }
 
 export interface ExamDefinition {
