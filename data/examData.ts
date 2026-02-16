@@ -181,6 +181,16 @@ const CANTINA_COCKTAILS_KEY = [
   { id: 'cc-8', questionText: 'What ingredients & measurements go into the Tequila Gold Rush ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Reposado Tequila, 0.75oz Fresh Lemon Juice, 0.75oz Honey Syrup', points: 3 },
   { id: 'cc-9', questionText: 'What ingredients & measurements go into the Cantina Paloma ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Grapefruit Juice, 0.75oz Fresh Lime Juice, 0.5oz Simple Syrup, 2 drops Saline, 2 dashes Grapefruit Bitters, Owens Rio Red Soda', points: 4 },
   { id: 'cc-10', questionText: 'What ingredients & measurements go into the Puebla Paloma ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cazadores Blanco Tequila, 0.75oz Fresh Grapefruit Juice, 0.75oz Fresh Lime Juice, 0.5oz Simple Syrup, Soda Water', points: 3 },
+  { id: 'cc-11', questionText: 'What ingredients & measurements go into the Mezmerized Margarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Patrón Silver Tequila, 0.5oz Ilegal Mezcal, 1oz Fresh Lime Juice, 0.75oz Agave Syrup, 0.5oz Orange Curaçao', points: 4 },
+  { id: 'cc-12', questionText: 'What ingredients & measurements go into the Ultimate Margarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 1oz Triple Sec, 0.75oz Fresh Lime Juice, 0.5oz Agave Syrup', points: 3 },
+  { id: 'cc-13', questionText: 'What ingredients & measurements go into the Violet Agave ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cazcanes Blanco Tequila, 0.75oz Fresh Lemon Juice, 0.75oz Lavender Syrup, 0.5oz Crème de Violette', points: 3 },
+  { id: 'cc-14', questionText: 'What ingredients & measurements go into the Cantina Ranch Water ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Lime Juice, Topo Chico Mineral Water', points: 2 },
+  { id: 'cc-15', questionText: 'What ingredients & measurements go into The Bullgator ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Lime Juice, 0.5oz Agave Syrup, 4oz Red Bull', points: 3 },
+  { id: 'cc-16', questionText: 'What ingredients & measurements go into the Stargarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 1oz Cointreau, 0.75oz Fresh Lime Juice, 0.5oz Prickly Pear Syrup', points: 3 },
+  { id: 'cc-17', questionText: 'What ingredients & measurements go into the Miami Vice ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: 'Piña Colada: 1.5oz Bacardi Superior Rum, 2oz Pineapple Juice, 1oz Coco Real. Strawberry Daiquiri: 1.5oz Bacardi Superior Rum, 1oz Fresh Lime Juice, 0.75oz Simple Syrup, 4-5 Fresh Strawberries', points: 4 },
+  { id: 'cc-18', questionText: 'What ingredients & measurements go into our Cantina El Presidente ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Bacardi Reserve Ocho Rum, 0.75oz Dry Vermouth, 0.5oz Orange Curaçao, 0.25oz Grenadine, Orange Peel', points: 3 },
+  { id: 'cc-19', questionText: 'What ingredients & measurements go into our Cantina Category EX 5 Daiquiri ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Bacardi Reserve Ocho Rum, 0.75oz Fresh Lime Juice, 0.5oz Rich Simple Syrup (2:1)', points: 2 },
+  { id: 'cc-20', questionText: 'What ingredients & measurements go into our Frosé ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '4oz Rosé Wine, 1oz Vodka, 0.75oz Fresh Lemon Juice, 0.75oz Strawberry Syrup, 3-4 Fresh Strawberries', points: 3 },
 ];
 
 export const AVAILABLE_EXAMS: ExamDefinition[] = [
@@ -249,7 +259,7 @@ export const AVAILABLE_EXAMS: ExamDefinition[] = [
     id: 'beer-wine-knowledge',
     title: 'Beer & Wine Knowledge - Supplemental Examination',
     category: TestCategory.OAK,
-    role: Role.BARTENDER,
+    role: Role.SUPPLEMENTAL,
     subType: 'Supplemental',
     answerKey: BEER_WINE_KNOWLEDGE_KEY
   },
