@@ -265,6 +265,14 @@ export const gradeSubmission = async (
     - Wrong brand but correct varietal = 0.75 points
     - Both brand + varietal correct = FULL points
     
+    **HAPPY HOUR WINES vs BY-THE-GLASS WINES (PARTIAL CREDIT RULE)**:
+    For questions asking "List the RED wines we serve by the glass" (bw-6, ob-4 red portion) or "List the WHITE wines we serve by the glass" (bw-7, ob-4 white portion):
+    - The CORRECT answers are the by-the-glass wines (e.g., Don Genaro, Latitude 38, Romulo, Ferro 13 for reds; Villa Marin, Ponga, Echo Bay for whites).
+    - If a student lists a HAPPY HOUR wine instead (Impero Cabernet Sauvignon, Impero Merlot for reds; Albertoni Chardonnay, Albertoni Pinot Grigio for whites), award 0.5 points per Happy Hour wine listed.
+    - In the feedback, explicitly note: "Partial credit given — you listed a Happy Hour wine, not a by-the-glass wine."
+    - If a student mixes correct by-the-glass wines WITH Happy Hour wines, give FULL credit for the correct ones and 0.5 points for each Happy Hour wine.
+    - This rule also applies to ob-4 ("List all wines red & white we serve by the glass") — same partial credit for any Happy Hour wine listed in place of a by-the-glass wine.
+    
     **WINE POUR SIZE (Question 5-type)**:
     - Accept: "6", "6oz", "6 oz", "6 ounces", "5-6", "About 6", "Six" (ALL CORRECT)
     - Partial credit: "5 ounces" = 0.5 points (close enough)
