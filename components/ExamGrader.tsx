@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ExamDefinition, ExamResult } from '../types';
-import { gradeSubmission } from '../services/geminiService';
-import { UploadCloud, FileText, CheckCircle2, AlertCircle, AlertTriangle, RefreshCw, ChevronLeft, Award, Download, Printer } from 'lucide-react';
+import { gradeExam, getGradingEngine } from '../services/gradingRouter';
+import { UploadCloud, FileText, CheckCircle2, AlertCircle, AlertTriangle, RefreshCw, ChevronLeft, Award, Download, Printer, Cpu } from 'lucide-react';
 
 interface ExamGraderProps {
   exam: ExamDefinition;
@@ -16,6 +16,7 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   const [result, setResult] = useState<ExamResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [gradedBy, setGradedBy] = useState<'gemini' | 'claude' | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
 
@@ -61,7 +62,8 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
     }, 1000);
     
     try {
-      const gradingResult = await gradeSubmission(exam, textInput);
+      const gradingResult = await gradeExam(exam, textInput);
+      setGradedBy(gradingResult.gradedBy);
       setResult(gradingResult);
       onResultReady?.(gradingResult); // Notify parent component
     } catch (err: any) {
@@ -86,6 +88,7 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
       `Exam: ${result.examTitle}`,
       `Date: ${currentDate}`,
       `Score: ${result.totalScore} / ${result.maxScore} (${result.percentage.toFixed(1)}%)`,
+      ...(gradedBy ? [`Graded by: ${gradedBy === 'claude' ? 'Claude AI (Conceptual)' : 'Gemini AI (Factual)'}`] : []),
       `\nSUMMARY:`,
       `${result.rawFeedback || 'N/A'}`,
       `\n------------------------`,
@@ -186,6 +189,7 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
     setTextInput('');
     setStudentName('');
     setError(null);
+    setGradedBy(null);
     setElapsedTime(0);
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -215,6 +219,18 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
                <div>
                   <h2 className="text-2xl font-bold text-foreground mb-1">{result.examTitle}</h2>
                   <p className="text-muted-foreground">Automated Grading Report</p>
+                  {gradedBy && (
+                    <div className="mt-2 no-print">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                        gradedBy === 'claude' 
+                          ? 'bg-orange-100 text-orange-700 border border-orange-200' 
+                          : 'bg-blue-100 text-blue-700 border border-blue-200'
+                      }`}>
+                        <Cpu className="w-3 h-3" />
+                        Graded by {gradedBy === 'claude' ? 'Claude AI' : 'Gemini AI'}
+                      </span>
+                    </div>
+                  )}
                </div>
                
                {/* Score & Actions */}
@@ -436,6 +452,15 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
             </>
           )}
         </button>
+        {/* Engine indicator */}
+        <div className="text-center mt-2">
+          <span className={`inline-flex items-center gap-1 text-xs ${
+            getGradingEngine(exam.id) === 'claude' ? 'text-orange-500' : 'text-blue-500'
+          }`}>
+            <Cpu className="w-3 h-3" />
+            {getGradingEngine(exam.id) === 'claude' ? 'Claude AI — Optimized for scenario questions' : 'Gemini AI — Optimized for factual questions'}
+          </span>
+        </div>
       </div>
     </div>
   );
