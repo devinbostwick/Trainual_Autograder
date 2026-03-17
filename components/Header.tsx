@@ -6,11 +6,11 @@ const BASE = import.meta.env.BASE_URL || '/';
 export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white/80 backdrop-blur-xl">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-18 items-center justify-between px-4">
         <div className="flex items-center">
           {/* Organization Brand */}
           <div className="flex items-center select-none">
-            <img src={`${BASE}logos/tph-name-logo.png`} alt="Three Points Hospitality" className="h-11 w-auto object-contain" />
+            <img src={`${BASE}logos/tph-name-logo.png`} alt="Three Points Hospitality" className="h-14 w-auto object-contain" />
           </div>
           
           <div className="hidden md:block h-6 w-px bg-border/60 mx-5"></div>

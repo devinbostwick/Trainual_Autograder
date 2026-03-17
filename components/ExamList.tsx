@@ -89,7 +89,7 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
           <div key={category} className="space-y-4">
             <div className="flex items-center gap-3">
               {getCategoryLogo(category) ? (
-                <img src={getCategoryLogo(category)!} alt={category} className="h-9 w-auto object-contain" />
+                <img src={getCategoryLogo(category)!} alt={category} className="h-11 w-auto object-contain" />
               ) : (
                 <div className="p-2 rounded-md bg-primary/6 text-primary/70">
                   <BookOpen className="h-5 w-5" />
