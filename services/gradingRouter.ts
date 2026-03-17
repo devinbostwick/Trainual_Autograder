@@ -8,6 +8,8 @@ import { gradeSubmissionWithClaude } from "./claudeService";
  * - Host Standardized (15q, ~70% conceptual) 
  * - OAK Server (10q, ~50% conceptual)
  * - OAK Host (6q, ~50% conceptual)
+ * - OAK Bartender (10q, beer/wine knowledge questions)
+ * - Beer & Wine Knowledge (9q, supplemental)
  * - Cantina Host (5q, ~50% conceptual)
  * - Cantina Server (7q, ~50% conceptual)
  * 
@@ -18,6 +20,8 @@ const CLAUDE_EXAM_IDS = new Set([
   "std-host",
   "oak-server",
   "oak-host",
+  "oak-bartender",
+  "beer-wine-knowledge",
   "cantina-host",
   "cantina-server",
 ]);
