@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react';
 import { AVAILABLE_EXAMS } from '../data/examData';
 import { ExamDefinition, TestCategory, Role } from '../types';
-import { MapPin, Users, Wine, Utensils, ClipboardCheck, ArrowRight, Activity, LayoutGrid, BookOpen, TreePine, Flame } from 'lucide-react';
+import { Users, Wine, Utensils, ClipboardCheck, ArrowRight, Activity, LayoutGrid, BookOpen } from 'lucide-react';
+
+const BASE = import.meta.env.BASE_URL || '/';
 
 interface ExamListProps {
   onSelectExam: (exam: ExamDefinition) => void;
@@ -38,10 +40,11 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
     }
   };
 
-  const getCategoryIcon = (category: string) => {
-    if (category.toLowerCase().includes('oak') || category.toLowerCase().includes('american')) return <TreePine className="h-4 w-4" />;
-    if (category.toLowerCase().includes('cantina')) return <Flame className="h-4 w-4" />;
-    return <BookOpen className="h-4 w-4" />;
+  const getCategoryLogo = (category: string): string | null => {
+    if (category.toLowerCase().includes('oak') || category.toLowerCase().includes('american')) return `${BASE}logos/oak-logo.png`;
+    if (category.toLowerCase().includes('cantina')) return `${BASE}logos/cantina-logo.png`;
+    if (category.toLowerCase().includes('standard')) return `${BASE}favicon.png`;
+    return null;
   };
 
   return (
@@ -85,9 +88,13 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
         {Object.entries(groupedExams).map(([category, exams]) => (
           <div key={category} className="space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-md bg-primary/6 text-primary/70">
-                 {getCategoryIcon(category)}
-              </div>
+              {getCategoryLogo(category) ? (
+                <img src={getCategoryLogo(category)!} alt={category} className="h-6 w-auto object-contain" />
+              ) : (
+                <div className="p-1.5 rounded-md bg-primary/6 text-primary/70">
+                  <BookOpen className="h-4 w-4" />
+                </div>
+              )}
               <h3 className="text-sm font-semibold text-foreground tracking-wide uppercase">{category}</h3>
               <span className="text-[10px] text-muted-foreground/70 font-medium">{(exams as ExamDefinition[]).length} exam{(exams as ExamDefinition[]).length !== 1 ? 's' : ''}</span>
               <div className="h-px flex-1 bg-border/40 ml-2"></div>

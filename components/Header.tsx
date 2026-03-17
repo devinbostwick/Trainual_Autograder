@@ -1,15 +1,16 @@
 import React from 'react';
 import { ShieldCheck, Zap } from 'lucide-react';
 
+const BASE = import.meta.env.BASE_URL || '/';
+
 export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <div className="flex items-center">
           {/* Organization Brand */}
-          <div className="flex flex-col justify-center leading-none select-none">
-            <span className="font-semibold text-base tracking-tight text-foreground">Three Points</span>
-            <span className="font-medium text-[10px] tracking-[0.15em] text-muted-foreground uppercase">Hospitality Group</span>
+          <div className="flex items-center select-none">
+            <img src={`${BASE}logos/tph-name-logo.png`} alt="Three Points Hospitality" className="h-8 w-auto object-contain" />
           </div>
           
           <div className="hidden md:block h-6 w-px bg-border/60 mx-5"></div>
