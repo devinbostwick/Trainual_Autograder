@@ -11,8 +11,12 @@
 const _pw: string = process.env.TRAINUAL_PASSWORD as string;
 const _proxy: string = process.env.TRAINUAL_PROXY as string;
 
-// Proxy base URL — falls back to relative /api for local dev
-const PROXY_BASE = (_proxy && _proxy !== 'undefined') ? _proxy.replace(/\/$/, '') : '/api/trainual';
+// Proxy base URL — falls back to relative path for local dev via Vite proxy
+// When TRAINUAL_PROXY is set (e.g. https://trainual-proxy.onrender.com),
+// we append /api/trainual to match the server.ts route prefix.
+const PROXY_BASE = (_proxy && _proxy !== 'undefined')
+  ? `${_proxy.replace(/\/$/, '')}/api/trainual`
+  : '/api/trainual';
 
 const TRAINUAL_CONFIG = {
   ADMIN_EMAIL: 'devin@threepointshospitality.com',
@@ -20,11 +24,6 @@ const TRAINUAL_CONFIG = {
   PASSWORD: (_pw && _pw !== 'undefined') ? _pw : '',
   API_BASE: 'https://api.trainual.com/v1'
 };
-
-function buildAuthHeader(): string {
-  const username = `${TRAINUAL_CONFIG.ADMIN_EMAIL}&${TRAINUAL_CONFIG.ACCOUNT_ID}`;
-  return `Basic ${btoa(`${username}:${TRAINUAL_CONFIG.PASSWORD}`)}`;
-}
 
 async function trainualFetch(endpoint: string, method: string = 'GET', payload?: any): Promise<any> {
   // Use the proxy — direct browser calls to Trainual are blocked by CORS
