@@ -1,0 +1,5 @@
+{
+  "name": "Trainual Autograde",
+  "description": "AI-powered automated grading system for Three Points Hospitality training modules. Supports lax parsing for typos and semantic matching.",
+  "requestFramePermissions": []
+}
