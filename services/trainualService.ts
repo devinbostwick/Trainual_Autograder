@@ -4,10 +4,13 @@
  * Credentials are injected at build time via Vite env variables.
  */
 
+// Password is injected at build time by Vite's define config
+const _pw: string = process.env.TRAINUAL_PASSWORD as string;
+
 const TRAINUAL_CONFIG = {
   ADMIN_EMAIL: 'devin@threepointshospitality.com',
   ACCOUNT_ID: 'f9e05a9e-ccec-463e-beae-d1c5489f4c52',
-  PASSWORD: process.env.TRAINUAL_PASSWORD || '',
+  PASSWORD: (_pw && _pw !== 'undefined') ? _pw : '',
   API_BASE: 'https://api.trainual.com/v1'
 };
 
@@ -70,5 +73,5 @@ export async function unassignCurriculums(userId: number, curriculumIds: number[
 }
 
 export function isTrainualConfigured(): boolean {
-  return !!TRAINUAL_CONFIG.PASSWORD;
+  return !!(TRAINUAL_CONFIG.PASSWORD && TRAINUAL_CONFIG.PASSWORD !== 'undefined' && TRAINUAL_CONFIG.PASSWORD.length > 0);
 }
