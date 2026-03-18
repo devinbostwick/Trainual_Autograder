@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Users, BookOpen, RefreshCw, FilterX, Search, ChevronDown, ChevronRight, CheckSquare, Square } from 'lucide-react';
+import { Users, BookOpen, RefreshCw, FilterX, Search, ChevronDown, ChevronRight, CheckSquare, Square, AlertTriangle } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { fetchUsers, fetchSubjects, fetchSubjectTests, assignCurriculums, unassignCurriculums, isTrainualConfigured } from '../services/trainualService';
 
 interface User {
   id: number;
@@ -45,22 +46,23 @@ export default function TestAssigner() {
   };
 
   const loadData = async () => {
+    if (!isTrainualConfigured()) {
+      showToast('Trainual password not configured. Add TRAINUAL_PASSWORD to your .env file.', 'error');
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
-      const [usersRes, subjectsRes] = await Promise.all([
-        fetch('/api/trainual/users'),
-        fetch('/api/trainual/subjects')
+      const [usersData, subjectsData] = await Promise.all([
+        fetchUsers(),
+        fetchSubjects()
       ]);
-
-      const usersData = await usersRes.json();
-      const subjectsData = await subjectsRes.json();
 
       // Process subjects
       const testSubjects: Subject[] = [];
       for (const s of subjectsData) {
         if ((s.surveys_count || 0) > 0) {
-          const testsRes = await fetch(`/api/trainual/subjects/${s.id}/tests`);
-          const testsData = await testsRes.json();
+          const testsData = await fetchSubjectTests(s.id);
           testSubjects.push({
             id: s.id,
             title: s.title || 'Untitled',
@@ -189,12 +191,8 @@ export default function TestAssigner() {
 
   const assignToUser = async (userId: number, subjectIds: number[]) => {
     try {
-      const res = await fetch(`/api/trainual/users/${userId}/assign`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curriculum_ids: subjectIds })
-      });
-      if (res.ok) {
+      const result = await assignCurriculums(userId, subjectIds);
+      if (result !== null) {
         setUsers(prev => prev.map(u => {
           if (u.id === userId) {
             const newAssigned = { ...u.assignedSubjectIds };
@@ -215,12 +213,8 @@ export default function TestAssigner() {
 
   const unassignFromUser = async (userId: number, subjectIds: number[]) => {
     try {
-      const res = await fetch(`/api/trainual/users/${userId}/unassign`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curriculum_ids: subjectIds })
-      });
-      if (res.ok) {
+      const result = await unassignCurriculums(userId, subjectIds);
+      if (result !== null) {
         setUsers(prev => prev.map(u => {
           if (u.id === userId) {
             const newAssigned = { ...u.assignedSubjectIds };
@@ -411,6 +405,21 @@ export default function TestAssigner() {
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
             <RefreshCw className="w-8 h-8 text-primary animate-spin mb-4" />
             <p className="text-sm font-medium text-muted-foreground">Loading Trainual data...</p>
+          </div>
+        )}
+
+        {!isTrainualConfigured() && !loading && (
+          <div className="absolute inset-0 bg-background/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-8">
+            <div className="max-w-md text-center">
+              <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-foreground mb-2">Trainual Not Connected</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Add your <code className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">TRAINUAL_PASSWORD</code> to the <code className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">.env</code> file and rebuild to enable the Test Assigner.
+              </p>
+              <div className="bg-muted/50 border border-border/60 rounded-lg p-4 text-left text-xs font-mono text-muted-foreground">
+                <div>TRAINUAL_PASSWORD=your_password_here</div>
+              </div>
+            </div>
           </div>
         )}
 
