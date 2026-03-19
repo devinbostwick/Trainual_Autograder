@@ -1,104 +1,83 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+  <img width="1200" alt="Training Dashboard" src="./trainer_shot.png" />
 </div>
 
-# Trainual Autograder
+<br />
 
-An AI-powered exam grading application built with React, TypeScript, and Google's Gemini API. This app allows you to automatically grade exams and provide detailed feedback to students.
+# Training Dashboard
 
-🔗 **[Live Demo](https://Three-Points-Hospitality-Group.github.io/training-dashboard/)**
+An internal operations dashboard for **Three Points Hospitality Group** — built with React, TypeScript, and AI. Connects directly to Trainual to manage staff, assign curriculum, and automatically grade exams using Claude and Gemini.
 
-## Features
-
-- 📝 Automatic exam grading using AI
-- 💡 Detailed feedback and explanations
-- 🎯 Support for multiple exam types
-- 🚀 Fast and accurate results
-- 🎨 Clean, modern UI
-- 💬 **Intelligence Chat** - AI-powered assistant to help HR and trainers analyze exam results and make informed grading decisions
-
-## Quick Start
-
-### Option 1: Use the Live App
-
-Simply visit the [live app](https://Three-Points-Hospitality-Group.github.io/training-dashboard/) and enter your Gemini API key to get started.
-
-### Option 2: Run Locally
-
-**Prerequisites:** Node.js (v16 or higher)
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Three-Points-Hospitality-Group/training-dashboard.git
-   cd training-dashboard
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Set up your API key:**
-   - Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey)
-   - Create a `.env.local` file in the root directory
-   - Add your API key:
-     ```
-     GEMINI_API_KEY=your_api_key_here
-     ```
-
-4. **Run the app:**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser:**
-   Navigate to `http://localhost:3000`
-
-## How to Get a Gemini API Key
-
-1. Visit [Google AI Studio](https://aistudio.google.com/apikey)
-2. Sign in with your Google account
-3. Click "Create API Key"
-4. Copy your API key and use it in the app
-
-**Note:** The API key is stored locally in your browser and is never sent to any server except Google's Gemini API.
-
-## Deployment
-
-This app is automatically deployed to GitHub Pages. To deploy your own version:
-
-1. **Update the repository URL** in `package.json` and `vite.config.ts`
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-3. **Deploy:**
-   ```bash
-   npm run deploy
-   ```
-
-## Tech Stack
-
-- **Frontend:** React 19, TypeScript
-- **Build Tool:** Vite
-- **AI:** Google Gemini API
-- **Styling:** Modern CSS
-- **Icons:** Lucide React
-- **Hosting:** GitHub Pages
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-MIT License - feel free to use this project for your own purposes.
-
-## Support
-
-If you encounter any issues or have questions, please [open an issue](https://github.com/Three-Points-Hospitality-Group/training-dashboard/issues).
+🔗 **[Live App](https://Three-Points-Hospitality-Group.github.io/training-dashboard/)**
 
 ---
 
-Made with ❤️ by [Devin Bostwick](https://github.com/devinbostwick)
+## What it does
+
+### � Manage Staff
+Browse all employees pulled live from Trainual. Filter by role (Host, Server, Bartender) and open any employee's profile to view their completion stats, assigned subjects, and progress by category.
+
+### � Test Assigner
+Assign and unassign Trainual curriculum subjects to individual employees directly from the dashboard — no need to open Trainual.
+
+### 🎓 Grade Exam
+Paste a student's Trainual score report and get AI-powered grading in seconds. Supports all exam types across OAK and Cantina. Handles real-world input — typos, abbreviations, casual phrasing — with "I know what you meant" grading logic.
+
+Grading is routed to the best AI model for each exam type:
+- **Claude** — scenario, conceptual, and hospitality knowledge questions
+- **Gemini** — factual, ingredient-based, and recipe questions
+
+### 🔐 Admin Panel
+Passcode-protected settings panel. Update API keys and config directly in the browser — changes take effect immediately without a rebuild.
+
+---
+
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Frontend | React 19, TypeScript, Vite |
+| Styling | Tailwind CSS, shadcn-style primitives |
+| AI — Grading | Anthropic Claude, Google Gemini |
+| Data | Trainual API (via Render.com CORS proxy) |
+| Hosting | GitHub Pages (auto-deploy via Actions) |
+| Icons | Lucide React |
+
+---
+
+## Local Development
+
+**Prerequisites:** Node.js v18+
+
+```bash
+git clone https://github.com/Three-Points-Hospitality-Group/training-dashboard.git
+cd training-dashboard
+npm install
+```
+
+Create a `.env.local` file:
+```
+GEMINI_API_KEY=your_key
+CLAUDE_API_KEY=your_key
+TRAINUAL_PASSWORD=your_password
+TRAINUAL_PROXY=https://trainual-proxy.onrender.com
+ADMIN_PASSWORD=your_passcode
+```
+
+```bash
+npm run dev
+# → http://localhost:3000
+```
+
+---
+
+## Deployment
+
+Pushes to `main` auto-deploy via GitHub Actions → GitHub Pages. API keys are injected at build time from GitHub repository secrets.
+
+To update a secret: **GitHub → Settings → Secrets → Actions** → update value → re-run the Deploy workflow.
+
+---
+
+*Built for Three Points Hospitality Group · Internal use only*
 
