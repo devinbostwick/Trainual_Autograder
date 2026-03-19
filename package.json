@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Three-Points-Hospitality-Group.github.io/Trainual_Autograder",
+  "homepage": "https://Three-Points-Hospitality-Group.github.io/training-dashboard",
   "scripts": {
     "dev": "vite",
     "dev:server": "npx tsx server.ts",

@@ -7,7 +7,7 @@ import {
 import { cn } from '../lib/utils';
 import { getConfig, setConfig, isOverridden, ConfigKey } from '../services/localConfig';
 
-const GITHUB_REPO = 'https://github.com/Three-Points-Hospitality-Group/Trainual_Autograder';
+const GITHUB_REPO = 'https://github.com/Three-Points-Hospitality-Group/training-dashboard';
 const GITHUB_SECRETS_URL = `${GITHUB_REPO}/settings/secrets/actions`;
 const GITHUB_ACTIONS_URL = `${GITHUB_REPO}/actions`;
 const RENDER_URL = 'https://trainual-proxy.onrender.com';

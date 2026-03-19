@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
         outDir: '../dist',
         emptyOutDir: true,
       },
-      base: '/Trainual_Autograder/',
+      base: '/training-dashboard/',
       server: {
         port: 3000,
         host: '0.0.0.0',
