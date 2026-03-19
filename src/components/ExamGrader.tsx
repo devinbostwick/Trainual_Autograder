@@ -7,11 +7,13 @@ interface ExamGraderProps {
   exam: ExamDefinition;
   onBack: () => void;
   onResultReady?: (result: ExamResult | null) => void;
+  initialStudentName?: string; // Pre-fill when launched from a user profile
+  hideBackButton?: boolean;    // Hide when embedded inside a tab
 }
 
-export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultReady }) => {
+export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultReady, initialStudentName = '', hideBackButton = false }) => {
   const [textInput, setTextInput] = useState('');
-  const [studentName, setStudentName] = useState('');
+  const [studentName, setStudentName] = useState(initialStudentName);
   const [isGrading, setIsGrading] = useState(false);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -204,9 +206,11 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   if (result) {
     return (
       <div className="w-full max-w-4xl mx-auto">
-        <button onClick={reset} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors no-print">
-          <ChevronLeft className="mr-1 h-4 w-4" /> Grade another student
-        </button>
+        {!hideBackButton && (
+          <button onClick={reset} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors no-print">
+            <ChevronLeft className="mr-1 h-4 w-4" /> Grade another student
+          </button>
+        )}
 
         {/* This ID 'printable-report' is targeted by the handlePrint function */}
         <div id="printable-report" className="bg-white border border-border/70 rounded-lg shadow-sm overflow-hidden mb-12">
@@ -373,9 +377,11 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <button onClick={onBack} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-        <ChevronLeft className="mr-1 h-4 w-4" /> Back to assessments
-      </button>
+      {!hideBackButton && (
+        <button onClick={onBack} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ChevronLeft className="mr-1 h-4 w-4" /> Back to assessments
+        </button>
+      )}
 
       <div className="mx-auto mb-8 max-w-3xl">
         <div className="inline-flex items-center gap-1.5 bg-primary/5 border border-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide mb-4">

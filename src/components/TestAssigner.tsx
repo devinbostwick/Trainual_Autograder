@@ -4,13 +4,16 @@ import * as ProgressPrimitive from '@radix-ui/react-progress';
 import {
   Users, BookOpen, RefreshCw, Search, ChevronRight,
   AlertTriangle, X, MapPin, Award, Mail, Hash,
-  CheckCircle2, Circle, ArrowLeft
+  CheckCircle2, Circle, ArrowLeft, ClipboardCheck
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import {
   fetchUsers, fetchSubjects, fetchSubjectTests,
   assignCurriculums, unassignCurriculums, isTrainualConfigured
 } from '../services/trainualService';
+import { ExamGrader } from './ExamGrader';
+import { ExamList } from './ExamList';
+import { ExamDefinition } from '../types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -462,8 +465,9 @@ interface UserProfileProps {
 }
 
 function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: UserProfileProps) {
-  const [activeTab, setActiveTab] = useState<'relevant' | 'all'>('relevant');
+  const [activeTab, setActiveTab] = useState<'relevant' | 'all' | 'grade'>('relevant');
   const [pendingIds, setPendingIds] = useState<Set<number>>(new Set());
+  const [selectedExam, setSelectedExam] = useState<ExamDefinition | null>(null);
 
   const assignedCount = Object.keys(user.assignedSubjectIds).length;
   const relevantAssigned = relevantSubjects.filter(s => user.assignedSubjectIds[s.id]).length;
@@ -590,11 +594,34 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
             {allSubjects.length}
           </span>
         </button>
+        <button
+          onClick={() => { setActiveTab('grade'); setSelectedExam(null); }}
+          className={cn(
+            'px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-all -mb-px',
+            activeTab === 'grade'
+              ? 'border-primary text-primary bg-primary/5'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <ClipboardCheck className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
+          Grade Exam
+        </button>
       </div>
 
-      {/* Subject List */}
+      {/* Subject List / Grade Exam */}
       <div className="flex-1 overflow-y-auto p-6">
-        {grouped.length === 0 ? (
+        {activeTab === 'grade' ? (
+          selectedExam ? (
+            <ExamGrader
+              exam={selectedExam}
+              onBack={() => setSelectedExam(null)}
+              initialStudentName={user.name}
+              hideBackButton={false}
+            />
+          ) : (
+            <ExamList onSelectExam={setSelectedExam} />
+          )
+        ) : grouped.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-muted-foreground gap-2">
             <BookOpen className="w-8 h-8 opacity-30" />
             <p className="text-sm">No subjects found</p>
