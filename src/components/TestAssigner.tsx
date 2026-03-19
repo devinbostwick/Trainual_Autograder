@@ -359,9 +359,7 @@ export default function TestAssigner() {
             <div className="p-2 space-y-0.5">
               {filteredUsers.map(user => {
                 const assigned = Object.keys(user.assignedSubjectIds).length;
-                const relevant = relevantRolesForUser(user.title);
-                const relevantTotal = subjects.filter(s => relevant.includes(s.role)).length;
-                const pct = relevantTotal > 0 ? Math.round((assigned / relevantTotal) * 100) : 0;
+                const pct = user.completionPct;
                 const isSelected = selectedUserId === user.id;
 
                 return (
