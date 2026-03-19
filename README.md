@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="1200" alt="Training Dashboard" src="./trainer_shot.png" />
+  <img width="1200" alt="Training Dashboard" src="https://raw.githubusercontent.com/Three-Points-Hospitality-Group/training-dashboard/main/trainer_shot.png" />
 </div>
 
 <br />
