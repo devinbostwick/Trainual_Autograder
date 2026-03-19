@@ -1,15 +1,14 @@
 import React from 'react';
-import { Users, ClipboardCheck, Settings, Zap, ChevronRight, BookOpenCheck } from 'lucide-react';
+import { Users, ClipboardCheck, Settings, Zap, ChevronRight, BookOpenCheck, ShieldCheck } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-export type AppPage = 'staff' | 'assign' | 'grade' | 'settings';
+export type AppPage = 'staff' | 'assign' | 'grade' | 'admin';
 
 interface NavItem {
   id: AppPage;
   label: string;
   icon: React.ReactNode;
   section: string;
-  description: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
@@ -18,28 +17,18 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Manage Staff',
     icon: <Users className="w-4 h-4" />,
     section: 'Staff',
-    description: 'Filter by role & location, view profiles',
   },
   {
     id: 'assign',
     label: 'Test Assigner',
     icon: <BookOpenCheck className="w-4 h-4" />,
     section: 'Staff',
-    description: 'Assign & manage curriculum',
   },
   {
     id: 'grade',
     label: 'Grade Exam',
     icon: <ClipboardCheck className="w-4 h-4" />,
     section: 'Grading',
-    description: 'AI-powered exam grading',
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    icon: <Settings className="w-4 h-4" />,
-    section: 'Other',
-    description: 'API keys & configuration',
   },
 ];
 
@@ -118,7 +107,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => 
       </nav>
 
       {/* Footer */}
-      <div className="p-3 border-t border-border/60">
+      <div className="p-3 border-t border-border/60 space-y-1.5">
+        {/* Admin nav item — pinned to bottom */}
+        <button
+          onClick={() => onNavigate('admin')}
+          className={cn(
+            'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group',
+            currentPage === 'admin'
+              ? 'bg-primary/10 text-primary'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          )}
+        >
+          <span className={cn(
+            'shrink-0 transition-colors',
+            currentPage === 'admin' ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
+          )}>
+            <ShieldCheck className="w-4 h-4" />
+          </span>
+          <span className="flex-1 text-left">Admin</span>
+          {currentPage === 'admin' && (
+            <ChevronRight className="w-3.5 h-3.5 text-primary/50 shrink-0" />
+          )}
+        </button>
+
+        {/* AI status */}
         <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
           <span className="relative flex h-2 w-2 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -126,7 +138,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => 
           </span>
           <span className="text-[10px] font-medium text-emerald-700">AI Engine Online</span>
         </div>
-        <p className="text-[10px] text-muted-foreground/60 mt-2 px-2">
+        <p className="text-[10px] text-muted-foreground/60 px-2">
           © {new Date().getFullYear()} Three Points Hospitality
         </p>
       </div>

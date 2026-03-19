@@ -39,7 +39,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {currentPage === 'settings' && <SettingsPanel />}
+        {currentPage === 'admin' && <SettingsPanel />}
       </main>
     </div>
   );
