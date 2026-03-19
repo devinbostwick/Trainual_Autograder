@@ -2,18 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 import {
-  Users, BookOpen, RefreshCw, Search, ChevronRight,
-  AlertTriangle, X, MapPin, Award, Mail, Hash,
-  CheckCircle2, Circle, ArrowLeft, ClipboardCheck
+  Users, BookOpen, RefreshCw, Search,
+  AlertTriangle, X, Mail, Hash,
+  CheckCircle2, ArrowLeft
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import {
   fetchUsers, fetchSubjects, fetchSubjectTests,
   assignCurriculums, unassignCurriculums, isTrainualConfigured
 } from '../services/trainualService';
-import { ExamGrader } from './ExamGrader';
-import { ExamList } from './ExamList';
-import { ExamDefinition } from '../types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -268,7 +265,7 @@ export default function TestAssigner() {
 
   if (!isTrainualConfigured() && !loading) {
     return (
-      <div className="flex h-[calc(100vh-4rem)] items-center justify-center bg-background p-8">
+      <div className="flex h-screen items-center justify-center bg-background p-8">
         <Card className="max-w-md w-full">
           <CardContent className="pt-6 text-center">
             <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
@@ -283,7 +280,7 @@ export default function TestAssigner() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-background overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
 
       {/* ── Left Panel: Employee List ──────────────────────────────────────── */}
       <div className="w-72 border-r border-border/60 bg-card/40 flex flex-col shrink-0">
@@ -465,9 +462,8 @@ interface UserProfileProps {
 }
 
 function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: UserProfileProps) {
-  const [activeTab, setActiveTab] = useState<'relevant' | 'all' | 'grade'>('relevant');
+  const [activeTab, setActiveTab] = useState<'relevant' | 'all'>('relevant');
   const [pendingIds, setPendingIds] = useState<Set<number>>(new Set());
-  const [selectedExam, setSelectedExam] = useState<ExamDefinition | null>(null);
 
   const assignedCount = Object.keys(user.assignedSubjectIds).length;
   const relevantAssigned = relevantSubjects.filter(s => user.assignedSubjectIds[s.id]).length;
@@ -594,34 +590,11 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
             {allSubjects.length}
           </span>
         </button>
-        <button
-          onClick={() => { setActiveTab('grade'); setSelectedExam(null); }}
-          className={cn(
-            'px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-all -mb-px',
-            activeTab === 'grade'
-              ? 'border-primary text-primary bg-primary/5'
-              : 'border-transparent text-muted-foreground hover:text-foreground'
-          )}
-        >
-          <ClipboardCheck className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
-          Grade Exam
-        </button>
       </div>
 
-      {/* Subject List / Grade Exam */}
+      {/* Subject List */}
       <div className="flex-1 overflow-y-auto p-6">
-        {activeTab === 'grade' ? (
-          selectedExam ? (
-            <ExamGrader
-              exam={selectedExam}
-              onBack={() => setSelectedExam(null)}
-              initialStudentName={user.name}
-              hideBackButton={false}
-            />
-          ) : (
-            <ExamList onSelectExam={setSelectedExam} />
-          )
-        ) : grouped.length === 0 ? (
+        {grouped.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-muted-foreground gap-2">
             <BookOpen className="w-8 h-8 opacity-30" />
             <p className="text-sm">No subjects found</p>

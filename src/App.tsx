@@ -1,13 +1,40 @@
-import React from 'react';
-import { Header } from './components/Header';
+import React, { useState } from 'react';
+import { Sidebar, AppPage } from './components/Sidebar';
 import TestAssigner from './components/TestAssigner';
+import { ExamList } from './components/ExamList';
+import { ExamGrader } from './components/ExamGrader';
+import { SettingsPanel } from './components/SettingsPanel';
+import { ExamDefinition } from './types';
 
 const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<AppPage>('staff');
+  const [selectedExam, setSelectedExam] = useState<ExamDefinition | null>(null);
+
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary/20">
-      <Header />
-      <main className="flex-1 overflow-hidden">
-        <TestAssigner />
+    <div className="h-screen bg-background text-foreground flex font-sans selection:bg-primary/20 overflow-hidden">
+      <Sidebar currentPage={currentPage} onNavigate={(page) => { setCurrentPage(page); setSelectedExam(null); }} />
+
+      <main className="flex-1 overflow-hidden flex flex-col">
+        {currentPage === 'staff' && <TestAssigner />}
+
+        {currentPage === 'grade' && (
+          <div className="flex-1 overflow-y-auto">
+            {selectedExam ? (
+              <div className="max-w-3xl mx-auto px-6 py-8">
+                <ExamGrader
+                  exam={selectedExam}
+                  onBack={() => setSelectedExam(null)}
+                />
+              </div>
+            ) : (
+              <div className="max-w-5xl mx-auto px-6 py-8">
+                <ExamList onSelectExam={setSelectedExam} />
+              </div>
+            )}
+          </div>
+        )}
+
+        {currentPage === 'settings' && <SettingsPanel />}
       </main>
     </div>
   );
