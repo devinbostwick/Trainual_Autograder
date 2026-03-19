@@ -28,7 +28,8 @@ export default defineConfig(({ mode }) => {
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.CLAUDE_API_KEY': JSON.stringify(env.CLAUDE_API_KEY),
         'process.env.TRAINUAL_PASSWORD': JSON.stringify(env.TRAINUAL_PASSWORD),
-        'process.env.TRAINUAL_PROXY': JSON.stringify(env.TRAINUAL_PROXY)
+        'process.env.TRAINUAL_PROXY': JSON.stringify(env.TRAINUAL_PROXY),
+        'process.env.ADMIN_PASSWORD': JSON.stringify(env.ADMIN_PASSWORD),
       },
       resolve: {
         alias: {

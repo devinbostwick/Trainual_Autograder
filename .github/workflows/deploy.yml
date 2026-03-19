@@ -35,6 +35,7 @@ jobs:
           CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
           TRAINUAL_PASSWORD: ${{ secrets.TRAINUAL_PASSWORD }}
           TRAINUAL_PROXY: https://trainual-proxy.onrender.com
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: npm run build
       
       - name: Upload artifact

@@ -8,26 +8,30 @@
  *   - Production: Deploy server.ts to Render/Railway and set the URL
  */
 
-const _pw: string = process.env.TRAINUAL_PASSWORD as string;
-const _proxy: string = process.env.TRAINUAL_PROXY as string;
+import { getConfig, hasConfig } from './localConfig';
 
-// Proxy base URL — falls back to relative path for local dev via Vite proxy
-// When TRAINUAL_PROXY is set (e.g. https://trainual-proxy.onrender.com),
-// we append /api/trainual to match the server.ts route prefix.
-const PROXY_BASE = (_proxy && _proxy !== 'undefined')
-  ? `${_proxy.replace(/\/$/, '')}/api/trainual`
-  : '/api/trainual';
+// Proxy base URL and password are read at call-time from localConfig
+// so that dashboard edits take effect without a page reload.
+function getProxyBase(): string {
+  const proxy = getConfig('TRAINUAL_PROXY');
+  return (proxy && proxy !== 'undefined')
+    ? `${proxy.replace(/\/$/, '')}/api/trainual`
+    : '/api/trainual';
+}
+
+function getPassword(): string {
+  return getConfig('TRAINUAL_PASSWORD');
+}
 
 const TRAINUAL_CONFIG = {
   ADMIN_EMAIL: 'devin@threepointshospitality.com',
   ACCOUNT_ID: 'f9e05a9e-ccec-463e-beae-d1c5489f4c52',
-  PASSWORD: (_pw && _pw !== 'undefined') ? _pw : '',
   API_BASE: 'https://api.trainual.com/v1'
 };
 
 async function trainualFetch(endpoint: string, method: string = 'GET', payload?: any): Promise<any> {
   // Use the proxy — direct browser calls to Trainual are blocked by CORS
-  const url = `${PROXY_BASE}${endpoint}`;
+  const url = `${getProxyBase()}${endpoint}`;
   const options: RequestInit = {
     method,
     headers: { 'Content-Type': 'application/json' }
@@ -76,8 +80,5 @@ export async function unassignCurriculums(userId: number, curriculumIds: number[
 }
 
 export function isTrainualConfigured(): boolean {
-  const hasProxy = _proxy && _proxy !== 'undefined' && _proxy.length > 0;
-  const hasPassword = _pw && _pw !== 'undefined' && _pw.length > 0;
-  // Works if we have a proxy URL (production) OR locally with the dev server
-  return !!(hasProxy || hasPassword);
+  return hasConfig('TRAINUAL_PROXY') || hasConfig('TRAINUAL_PASSWORD');
 }
