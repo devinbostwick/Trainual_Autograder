@@ -6,7 +6,7 @@
 
 An AI-powered exam grading application built with React, TypeScript, and Google's Gemini API. This app allows you to automatically grade exams and provide detailed feedback to students.
 
-🔗 **[Live Demo](https://three-points-hospitality-group.github.io/Trainual_Autograder/)**
+🔗 **[Live Demo](https://Three-Points-Hospitality-Group.github.io/Trainual_Autograder/)**
 
 ## Features
 
@@ -21,7 +21,7 @@ An AI-powered exam grading application built with React, TypeScript, and Google'
 
 ### Option 1: Use the Live App
 
-Simply visit the [live app](https://three-points-hospitality-group.github.io/Trainual_Autograder/) and enter your Gemini API key to get started.
+Simply visit the [live app](https://Three-Points-Hospitality-Group.github.io/Trainual_Autograder/) and enter your Gemini API key to get started.
 
 ### Option 2: Run Locally
 
@@ -29,7 +29,7 @@ Simply visit the [live app](https://three-points-hospitality-group.github.io/Tra
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/three-points-hospitality-group/Trainual_Autograder.git
+   git clone https://github.com/Three-Points-Hospitality-Group/Trainual_Autograder.git
    cd Trainual_Autograder
    ```
 
@@ -96,7 +96,7 @@ MIT License - feel free to use this project for your own purposes.
 
 ## Support
 
-If you encounter any issues or have questions, please [open an issue](https://github.com/three-points-hospitality-group/Trainual_Autograder/issues).
+If you encounter any issues or have questions, please [open an issue](https://github.com/Three-Points-Hospitality-Group/Trainual_Autograder/issues).
 
 ---
 
