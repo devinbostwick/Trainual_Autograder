@@ -18,8 +18,10 @@ interface User {
   id: number;
   name: string;
   email: string;
+  title: string; // Job title from Trainual (e.g. "Bartender", "Server")
   status: string;
   roles: string[];
+  completionPct: number;
   assignedSubjectIds: Record<number, boolean>;
 }
 
@@ -120,12 +122,12 @@ function getLocationAccent(location: string) {
 }
 
 // Maps a user's role title → which Subject roles are relevant
-function relevantRolesForUser(userRoles: string[]): Subject['role'][] {
-  const joined = userRoles.join(' ').toLowerCase();
+function relevantRolesForUser(userTitle: string): Subject['role'][] {
+  const t = userTitle.toLowerCase();
   const result = new Set<Subject['role']>(['General']);
-  if (joined.includes('server') || joined.includes('service')) result.add('Server');
-  if (joined.includes('bartender') || joined.includes('bar')) result.add('Bartender');
-  if (joined.includes('host')) result.add('Host');
+  if (t.includes('server') || t.includes('service')) result.add('Server');
+  if (t.includes('bartender') || t.includes('bar')) result.add('Bartender');
+  if (t.includes('host')) result.add('Host');
   return Array.from(result);
 }
 
@@ -183,6 +185,8 @@ export default function TestAssigner() {
           id: u.id,
           name: u.name || '',
           email: u.email || '',
+          title: u.title || '',
+          completionPct: u.completion_percentage ?? 0,
           status: u.status || '',
           roles: (u.roles_assigned || []).map((r: any) => r.name),
           assignedSubjectIds,
@@ -203,12 +207,11 @@ export default function TestAssigner() {
 
   const filteredUsers = useMemo(() => users.filter(u => {
     if (search) {
-      const h = `${u.name} ${u.email} ${u.roles.join(' ')}`.toLowerCase();
+      const h = `${u.name} ${u.email} ${u.title}`.toLowerCase();
       if (!h.includes(search.toLowerCase())) return false;
     }
     if (roleFilter !== 'All') {
-      const hasRole = u.roles.some(r => r.toLowerCase().includes(roleFilter.toLowerCase()));
-      if (!hasRole) return false;
+      if (!u.title.toLowerCase().includes(roleFilter.toLowerCase())) return false;
     }
     return true;
   }), [users, search, roleFilter]);
@@ -218,7 +221,7 @@ export default function TestAssigner() {
   // Subjects relevant to the selected user based on their role
   const userRelevantSubjects = useMemo(() => {
     if (!selectedUser) return subjects;
-    const relevant = relevantRolesForUser(selectedUser.roles);
+    const relevant = relevantRolesForUser(selectedUser.title);
     return subjects.filter(s => relevant.includes(s.role));
   }, [selectedUser, subjects]);
 
@@ -356,11 +359,10 @@ export default function TestAssigner() {
             <div className="p-2 space-y-0.5">
               {filteredUsers.map(user => {
                 const assigned = Object.keys(user.assignedSubjectIds).length;
-                const relevant = relevantRolesForUser(user.roles);
+                const relevant = relevantRolesForUser(user.title);
                 const relevantTotal = subjects.filter(s => relevant.includes(s.role)).length;
                 const pct = relevantTotal > 0 ? Math.round((assigned / relevantTotal) * 100) : 0;
                 const isSelected = selectedUserId === user.id;
-                const primaryRole = user.roles[0] || '';
 
                 return (
                   <button
@@ -388,13 +390,13 @@ export default function TestAssigner() {
                           <span className="text-[10px] text-muted-foreground shrink-0">{pct}%</span>
                         </div>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          {primaryRole && (
+                          {user.title && (
                             <span className={cn('text-[10px] px-1.5 py-0 rounded border font-medium', getRoleColor(
-                              primaryRole.toLowerCase().includes('host') ? 'Host'
-                              : primaryRole.toLowerCase().includes('server') ? 'Server'
-                              : primaryRole.toLowerCase().includes('bartender') ? 'Bartender' : ''
+                              user.title.toLowerCase().includes('host') ? 'Host'
+                              : user.title.toLowerCase().includes('server') ? 'Server'
+                              : user.title.toLowerCase().includes('bartender') ? 'Bartender' : ''
                             ))}>
-                              {primaryRole.split(' ')[0]}
+                              {user.title}
                             </span>
                           )}
                           <span className="text-[10px] text-muted-foreground">{assigned} assigned</span>
@@ -488,10 +490,9 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [displaySubjects]);
 
-  const primaryRole = user.roles[0] || 'No Role';
-  const roleKey = primaryRole.toLowerCase().includes('host') ? 'Host'
-    : primaryRole.toLowerCase().includes('server') ? 'Server'
-    : primaryRole.toLowerCase().includes('bartender') ? 'Bartender' : '';
+  const roleKey = user.title.toLowerCase().includes('host') ? 'Host'
+    : user.title.toLowerCase().includes('server') ? 'Server'
+    : user.title.toLowerCase().includes('bartender') ? 'Bartender' : '';
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -515,7 +516,7 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
               <h2 className="text-xl font-bold text-foreground">{user.name}</h2>
               {roleKey && (
                 <span className={cn('text-xs px-2 py-0.5 rounded-md border font-semibold', getRoleColor(roleKey))}>
-                  {primaryRole}
+                  {user.title}
                 </span>
               )}
               <span className={cn('text-xs px-2 py-0.5 rounded-md border font-medium',
@@ -540,9 +541,10 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
           {/* Stats */}
           <div className="flex gap-3 shrink-0">
             <div className="text-center p-3 rounded-xl bg-card border border-border/60 min-w-[72px]">
-              <div className="text-2xl font-bold text-foreground">{relevantPct}%</div>
-              <div className="text-[10px] text-muted-foreground mt-0.5">Complete</div>
-              <Progress value={relevantPct} className="mt-2 h-1.5" />
+              <div className="text-2xl font-bold text-foreground">{user.completionPct}%</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">Trainual</div>
+              <div className="text-[10px] text-muted-foreground">Complete</div>
+              <Progress value={user.completionPct} className="mt-2 h-1.5" />
             </div>
             <div className="text-center p-3 rounded-xl bg-card border border-border/60 min-w-[72px]">
               <div className="text-2xl font-bold text-foreground">{relevantAssigned}</div>
