@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ExamDefinition, ExamResult, GradedQuestion } from "../types";
+import { preprocessSubmission } from "./preprocessSubmission";
 
 const parseScore = (value: any): number => {
     if (typeof value === 'number') return value;
@@ -28,6 +29,9 @@ export const gradeSubmission = async (
   if (!key) {
     throw new Error("API Key is missing from environment variables.");
   }
+
+  // Clean up raw Trainual paste before sending to AI
+  const cleanedText = preprocessSubmission(studentText, exam.answerKey.length);
 
   const ai = new GoogleGenAI({ apiKey: key });
 
@@ -129,6 +133,18 @@ export const gradeSubmission = async (
        - "patron" vs "patrón" (CORRECT)
        - "cointreau" vs "cointrau" (CORRECT)
        - "grey goose" vs "gray goose" (CORRECT)
+    
+    HUMAN ERROR TOLERANCE — "I KNOW WHAT YOU MEANT" GRADING:
+    These patterns ALWAYS get full credit if the intent is clear:
+    - Phonetic spelling: "vodca"→vodka, "wisky"→whiskey, "champayne"→champagne, "tequilla"→tequila
+    - Missing vowels / text-speak: "chardny"→chardonnay, "sauv blanc"→sauvignon blanc, "pino"→pinot
+    - Abbreviations: "OJ"→orange juice, "PG"→pinot grigio, "PN"→pinot noir, "sauv"→sauvignon, "cab"→cabernet
+    - Dropped obvious words: "syrup" from "simple syrup", "juice" from "lime juice", "water" from "soda water"
+    - Mixed/wrong case, extra punctuation — always ignore
+    - Hedge phrases: "I think it's...", "maybe...", "I believe..." — grade the substance only
+    - Reversed list order — never penalize
+    - Numbers as words: "five"→5, "half"→0.5, "two"→2
+    - Common misspellings of wine/beer terms: always apply semantic match over exact spelling
     
     5. **Formatting**: Ignore capitalization, extra spaces, and punctuation differences.
        - "Salt Rim" = "salt rim" = "saltrim" (CORRECT)
@@ -353,8 +369,15 @@ export const gradeSubmission = async (
     ANSWER KEY JSON:
     ${JSON.stringify(exam.answerKey)}
     
-    STUDENT SUBMISSION TEXT:
-    ${studentText}
+    STUDENT SUBMISSION (pre-parsed from Trainual, format is "Q<n>: <student answer>"):
+    ${cleanedText}
+    
+    ANSWER EXTRACTION RULES:
+    - Each line is "Q<number>: answer" — map Q1 to the 1st answer key question, Q2 to the 2nd, etc. (by position)
+    - If a line is missing, that question was blank — use "(No answer provided)"
+    - Student answers may be: comma-separated lists, abbreviations, single words, casual phrasing
+    - Extract exactly what the student wrote for each Q number — do not invent or assume
+    - Never mark "(Not Found)" if there is ANY text for that question number
   `;
 
   try {

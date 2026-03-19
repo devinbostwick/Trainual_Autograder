@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { ExamDefinition, ExamResult, GradedQuestion } from "../types";
+import { preprocessSubmission } from "./preprocessSubmission";
 
 const parseScore = (value: any): number => {
   if (typeof value === "number") return value;
@@ -30,6 +31,9 @@ export const gradeSubmissionWithClaude = async (
   if (!key) {
     throw new Error("Claude API Key is missing. Add CLAUDE_API_KEY to your .env file.");
   }
+
+  // Clean up raw Trainual paste before sending to AI
+  const cleanedText = preprocessSubmission(studentText, exam.answerKey.length);
 
   const anthropic = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
 
@@ -76,6 +80,24 @@ GRADING RULES FOR CONCEPTUAL/SCENARIO QUESTIONS:
 
 8. **Spelling & Grammar**: Do NOT penalize for spelling, grammar, or formatting. Focus purely on content and understanding.
 
+HUMAN ERROR TOLERANCE — "I KNOW WHAT YOU MEANT" GRADING:
+
+These patterns ALWAYS get full credit if the intent is clear:
+- Phonetic spelling: "vodca"→vodka, "wisky"→whiskey, "champayne"→champagne, "tequilla"→tequila
+- Missing vowels / text-speak: "chardny"→chardonnay, "sauv blanc"→sauvignon blanc, "cab sav"→cabernet sauvignon
+- Abbreviations: "OJ"→orange juice, "CB"→club soda, "PG"→pinot grigio, "PN"→pinot noir, "sauv"→sauvignon
+- Dropped words that are obvious: "syrup" dropped from "simple syrup", "juice" dropped from "lime juice"
+- Mixed case / all caps / all lowercase — always ignore
+- Extra filler words: "I think it's...", "something like...", "I believe..." — grade the substance, ignore the hedge
+- Reversed order in lists — never penalize
+- Numbers written as words: "five"→5, "half"→0.5, "a quarter"→0.25
+
+ANSWER EXTRACTION INSTRUCTIONS:
+- The submission has been pre-parsed into "Q<n>: answer" format
+- Match Q1 to the 1st question in the answer key, Q2 to the 2nd, etc. (by position, not by ID string)
+- If a student clearly attempts an answer even with major errors, extract what they wrote and grade it
+- Never mark "(Not Found)" if there's ANY text for that question number
+
 FACTUAL QUESTIONS (when they appear in conceptual exams):
 
 9. **Units & Measurements**: Cocktail measurements must be EXACT. "1oz" ≠ "1.5oz" = 0 credit for that ingredient. Missing measurement = 0 credit.
@@ -116,8 +138,16 @@ Return ONLY valid JSON matching this exact structure:
 ANSWER KEY JSON:
 ${JSON.stringify(exam.answerKey)}
 
-STUDENT SUBMISSION TEXT:
-${studentText}
+STUDENT SUBMISSION (pre-parsed from Trainual, format is "Q<n>: <student answer>"):
+${cleanedText}
+
+ANSWER EXTRACTION RULES:
+- Each line is "Q<number>: <answer>" — map Q1→first answer key question, Q2→second, etc.
+- If a line is missing, that question was left blank — mark as "(No answer provided)"
+- Student answers may have: typos, abbreviations, comma-separated lists, casual phrasing
+- "I know what they meant" grading — if it's recognizably correct, credit it
+- Do NOT penalize for spelling errors, capitalization, missing punctuation
+- Short answers like "5" or "ABV" or "yes" are valid — don't expect full sentences
 
 Return ONLY the JSON response, no other text.`;
 
